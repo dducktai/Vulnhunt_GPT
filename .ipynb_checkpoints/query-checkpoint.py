@@ -5,24 +5,17 @@ from langchain_pinecone import PineconeVectorStore
 from pinecone import Pinecone
 import argparse
 from langchain_openai import OpenAIEmbeddings
-from dotenv import load_dotenv
-import module_preprocessing
 
 # Load environment variables
-
-load_dotenv()
-
-# Load environment variables
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+os.environ["OPENAI_API_KEY"] = "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"
+os.environ['PINECONE_API_KEY'] = 'pcsk_3g4mTY_HJ4TSsa17ZFrUDXxssVSKLxnVRZGvMiqUp84PrkrqeWF7YXhvbuADN5B4vnu1fz'
 
 api_key = os.environ["PINECONE_API_KEY"]
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
-module_preprocessing.configure_api(api_key="AIzaSyBPprZiNSgAKuWeUqqE56kml1248z4dsTY")
-model = module_preprocessing.create_model()
+
 # Initialize Pinecone
 pc = Pinecone(api_key=api_key)
-index_name = "vulnhunt-gpt-final"
+index_name = "vulnhunt-gpt"
 
 # Ensure the index exists
 existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
@@ -37,6 +30,8 @@ vectorstore = PineconeVectorStore(
     embedding=embeddings
 )
 
+
+
 llm = ChatOpenAI(
     openai_api_key=OPENAI_API_KEY,
     model_name='gpt-3.5-turbo',
@@ -49,22 +44,20 @@ qa = RetrievalQAWithSourcesChain.from_chain_type(
     retriever=vectorstore.as_retriever()
 )
 
+def get_multiline_input(prompt="Nhập prompt của bạn (kết thúc bằng dòng trống):"):
+    print(prompt)
+    lines = []
+    while True:
+        line = input()  # Đọc từng dòng
+        if line.strip() == "":  # Nếu dòng trống, dừng nhập
+            break
+        lines.append(line)
+    return "\n".join(lines)  # Ghép các dòng thành một chuỗi
 
 if __name__ == "__main__":
     print("===================== VULNHUNT-GPT ====================")
-    user_input = module_preprocessing.get_user_input()
-    chat_session = module_preprocessing.start_chat_session(model, user_input)
-    response = module_preprocessing.send_message(chat_session, user_input)
-    formatted_response = module_preprocessing.process_response(response)
-    module_preprocessing.save_response(formatted_response)
-    # print(formatted_response)
-    # Tiền xử lý mã Solidity
-    user_prompt = """ You are VulnHunt—GPT. You will analyze the Solidity smart contract in order to find any vulnerabilities. When you find vulnerability, you will answer always in this way: 
-            You MUST always divide the answer in two sections: 
-            — Vulnerabilities: and 
-            — Remediation: For Vulnerabilities you will describe any vulnerabilities that you have found and what cause them. For Remediation you will suggest the remediation and any possible fixes to the source code""" + formatted_response
+    user_prompt = "give me the vulnerability of this code, then give me the remediation of the vulnerability " + get_multiline_input("Nhập prompt của bạn (kết thúc bằng dòng trống):")
     
-
     # Gọi LLM để lấy kết quả
     response = qa.invoke(user_prompt)
     
@@ -78,5 +71,3 @@ if __name__ == "__main__":
     print(answer, end= "")
     print(f"\nNguồn:\n{sources}")
     print("--------------------------------")
-
-    

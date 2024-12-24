@@ -1,6 +1,7 @@
 import os
 import google.generativeai as genai
-import sys
+
+
 
 # Configure the API
 genai.configure(api_key="")
@@ -20,8 +21,7 @@ model = genai.GenerativeModel(
 )
 
 # Prompt the user for the Solidity input
-print("Paste your code and press Ctrl+D (or Ctrl+Z on Windows) to finish:")
-user_input = sys.stdin.read()
+user_input = input("Nhập nội dung để phân tích: ")
 
 # Start the chat session
 chat_session = model.start_chat(
@@ -47,8 +47,8 @@ if response_text.startswith("```solidity"):
 if response_text.endswith("```"):
     response_text = response_text[:-3].strip()
 
-# Định dạng lại đầu ra để có dạng giống như mong muốn
-formatted_response = response_text.replace("\n", " \\n\\n\\").replace(" \\n\\n\\", " \\n\\\n")
+
+
 
 # Create the folder if it doesn't exist
 folder_path = "solidity"
@@ -57,7 +57,9 @@ os.makedirs(folder_path, exist_ok=True)
 # Save the response into a text file
 file_path = os.path.join(folder_path, "clean_prompt_from_user.txt")
 with open(file_path, "w", encoding="utf-8") as file:
-    file.write(formatted_response)
+    file.write(response_text)
+
+
 
 print("\n -------- \n ")
 print(f"Response saved to {file_path}")

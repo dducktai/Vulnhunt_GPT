@@ -1,0 +1,22 @@
+pragma solidity ^0.4.24; \n\
+ \n\
+contract Reentrancy_bonus{ \n\
+ \n\
+    mapping (address => uint) private userBalances; \n\
+    mapping (address => bool) private claimedBonus; \n\
+    mapping (address => uint) private rewardsForA; \n\
+ \n\
+    function withdrawReward(address recipient) public { \n\
+        uint amountToWithdraw = rewardsForA[recipient]; \n\
+        rewardsForA[recipient] = 0; \n\
+        (bool success, ) = recipient.call.value(amountToWithdraw)(""); \n\
+        require(success); \n\
+    } \n\
+ \n\
+    function getFirstWithdrawalBonus(address recipient) public { \n\
+        require(!claimedBonus[recipient]); \n\
+        rewardsForA[recipient] += 100; \n\
+        withdrawReward(recipient); \n\
+        claimedBonus[recipient] = true; \n\
+    } \n\
+}
