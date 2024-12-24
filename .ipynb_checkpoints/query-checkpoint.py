@@ -7,8 +7,8 @@ import argparse
 from langchain_openai import OpenAIEmbeddings
 
 # Load environment variables
-os.environ["OPENAI_API_KEY"] = "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"
-os.environ['PINECONE_API_KEY'] = 'pcsk_3g4mTY_HJ4TSsa17ZFrUDXxssVSKLxnVRZGvMiqUp84PrkrqeWF7YXhvbuADN5B4vnu1fz'
+os.environ["OPENAI_API_KEY"] = ""
+os.environ['PINECONE_API_KEY'] = ''
 
 api_key = os.environ["PINECONE_API_KEY"]
 OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]

@@ -15,7 +15,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 
 # Initialize Pinecone
-module_preprocessing.configure_api(api_key="AIzaSyBPprZiNSgAKuWeUqqE56kml1248z4dsTY")
+module_preprocessing.configure_api(api_key="")
 model = module_preprocessing.create_model()
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index_name = "vulnhunt-gpt-final"
