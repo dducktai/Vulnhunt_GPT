@@ -35,7 +35,7 @@ Output:
 Detected vulnerabilities:
 - Vulnerabilities: Reentrancy vulnerability X function 
 - Recommendation: Use checks-effects-interactions pattern.
-
+```
 
 ## License
 
